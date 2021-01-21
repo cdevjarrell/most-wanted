@@ -69,6 +69,7 @@ function searchByName(people){
     }
   })
   // TODO: find the person using the name they entered
+  // No results, 1 result, or multiple.
   return foundPerson[0];
 };
 
@@ -84,15 +85,38 @@ function displayPerson(person){
   // height, weight, age, name, occupation, eye color.
   let personInfo = "First Name: " + person.firstName + "\n";
   personInfo += "Last Name: " + person.lastName + "\n";
-  personInfo += "Gender: " + person.gender + "\n";
-  personInfo += "Date of Birth: " + person.dob + "\n";
-  personInfo += "Height: " + person.height + "\n";
-  personInfo += "Weight: " + person.weight + "\n";
-  personInfo += "Eye Color: " + person.eyeColor + "\n";
-  personInfo += "Occupation: " + person.occupation + "\n";
+  personInfo += `${getGender(person)}\n`;
+  personInfo += `${getHeight(person)}\n`;
+  personInfo += `${getWeight(person)}\n`;
+  personInfo += `${getEyeColor(person)}\n`;
+  personInfo += `${getOccupation(person)}\n`;
+  personInfo += `${getGender(person)}\n`;
+
   // TODO: finish getting the rest of the information to display
   alert(personInfo);
 };
+
+function getGender(person) {
+  return "Gender: " + person.gender;
+}
+
+function getHeight(person) {
+  return "Height: " + person.height;
+}
+
+function getWeight(person) {
+  return "Weight: " + person.weight;
+}
+
+function getEyeColor(person) {
+  return "Eye Color: " + person.eyeColor;
+}
+
+function getOccupation(person) {
+  return "Occupation: " + person.occupation;
+}
+
+
 
 function displaySiblings(person, people){
   let siblings = false;
