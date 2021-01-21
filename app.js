@@ -21,7 +21,7 @@ function app(people){
   
   // Call the mainMenu function ONLY after you find the SINGLE person you are looking for
   mainMenu(searchResults, people);
-}
+};
 
 // Menu function to call once you find who you are looking for
 function mainMenu(person, people){
@@ -41,7 +41,7 @@ function mainMenu(person, people){
     displayPerson(person);
     break;
     case "family":
-    // TODO: get person's family
+    displaySiblings(person, people);
     break;
     case "descendants":
     // TODO: get person's descendants
@@ -54,7 +54,7 @@ function mainMenu(person, people){
     default:
     return mainMenu(person, people); // ask again
   }
-}
+};
 
 function searchByName(people){
   let firstName = promptFor("What is the person's first name?", chars);
@@ -70,14 +70,14 @@ function searchByName(people){
   })
   // TODO: find the person using the name they entered
   return foundPerson[0];
-}
+};
 
 // alerts a list of people
 function displayPeople(people){
   alert(people.map(function(person){
     return person.firstName + " " + person.lastName;
   }).join("\n"));
-}
+};
 
 function displayPerson(person){
   // print all of the information about a person:
@@ -92,6 +92,43 @@ function displayPerson(person){
   personInfo += "Occupation: " + person.occupation + "\n";
   // TODO: finish getting the rest of the information to display
   alert(personInfo);
+};
+
+function displaySiblings(person, people){
+  let siblings = false;
+  if (hasParents(person)){
+    siblings = people.filter(function(el) {
+      if (el.id !== person.id){
+        for(let i = 0; i < el.parents.length; i++){
+          if (el.parents[i] === person.parents[0]) { // Need to check for both parents, only checks against first parent currently.
+            return true;
+          }
+        }
+      }
+      return false;
+    })
+  }
+  if (siblings) {
+    let output = "";  
+    for(let i = 0; i < siblings.length; i++){
+      output += formatName(siblings[i]) + "\n";
+    }
+    alert(output);
+  }
+  else{
+    alert("No siblings found.");
+  }
+};
+
+function formatName(person){
+  return person.firstName + " " + person.lastName;
+}
+
+function hasParents(person){
+  if (person.parents.length !== 0){
+    return true;
+  }
+  return false;
 }
 
 // function that prompts and validates user input
@@ -100,14 +137,14 @@ function promptFor(question, valid){
     var response = prompt(question).trim();
   } while(!response || !valid(response));
   return response;
-}
+};
 
 // helper function to pass into promptFor to validate yes/no answers
 function yesNo(input){
   return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
-}
+};
 
 // helper function to pass in as default promptFor validation
 function chars(input){
   return true; // default validation only
-}
+};
