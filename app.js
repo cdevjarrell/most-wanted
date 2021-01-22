@@ -70,8 +70,51 @@ function searchByName(people){
   })
   // TODO: find the person using the name they entered
   // No results, 1 result, or multiple.
-  return foundPerson[0];
+  return menuController(foundPerson);;
 };
+
+function menuController(currentResults) {
+  if(currentResults.length > 1) {
+    
+    currentResults = multipleResultsMenu(currentResults);
+    
+  }
+  else if(currentResults.length == 0) {
+    currentResults = false;
+  }
+  else {
+    currentResults = currentResults[0];
+  }
+
+  return currentResults;
+}
+
+function multipleResultsMenu(results) {
+  let output = `${results.length} results found. Choose a number below for more information about that person. \n`;
+
+  output += `${getNameList(results)}`
+
+  let command = promptFor(output, chars);
+
+  if(results[Number(command) - 1]) {
+    return results[Number(command) - 1];
+
+  }
+  else {
+    return multipleResultsMenu(results);
+  }
+  
+}
+
+function getNameList(results) {
+  let list = "";
+  
+  for(let i = 0; i < results.length; i++) {
+      list += `${i + 1}: ${formatName(results[i])}\n`;
+  }
+
+  return list;
+}
 
 // alerts a list of people
 function displayPeople(people){
