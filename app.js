@@ -120,9 +120,33 @@ function displayFamily(person, people) {
   let output = '';
 
   output += getParents(person, people);
+  output += getSpouse(person, people);
   output += getSiblings(person, people);
 
+  if (!output) {
+    output += 'No family information available.';
+  }
   alert(output);
+}
+
+function getSpouse(person, people) {
+  let output = '';
+  
+  let spouse = people.filter(function (possibleSpouse) {
+    if (person.currentSpouse === possibleSpouse.id) {
+      return true;
+    } 
+    return false;
+  
+  });
+
+  if (spouse) {
+    for(let i = 0; i < spouse.length; i++){
+      output += `Spouse: ${formatName(spouse[i])}\n`;
+    }
+  }
+
+  return output;
 }
 
 function getSiblings(person, people){
@@ -132,7 +156,7 @@ function getSiblings(person, people){
     siblingsArray = people.filter(function(currentPerson) {
       if (currentPerson.id !== person.id){ // Not a sibling to yourself.
         for(let i = 0; i < currentPerson.parents.length; i++){
-          if (currentPerson.parents[i] === person.parents[0]) { // Need to check for both parents, only checks against first parent currently.
+          if (person.parents.includes(currentPerson.parents[i])) {
             return true;
           }
         }
@@ -140,7 +164,6 @@ function getSiblings(person, people){
       return false;
     })
   }
-
   if (siblingsArray) {
     for(let i = 0; i < siblingsArray.length; i++){
       siblings += `Sibling: ${formatName(siblingsArray[i])}\n`;
@@ -171,7 +194,7 @@ function getParents(person, people) {
 }
 
 function formatName(person){
-  return person.firstName + " " + person.lastName;
+  return `${person.firstName} ${person.lastName}`;
 }
 
 function hasParents(person){
