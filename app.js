@@ -103,7 +103,6 @@ function multipleResultsMenu(results) {
   else {
     return multipleResultsMenu(results);
   }
-  
 }
 
 function getNameList(results) {
@@ -128,35 +127,34 @@ function displayPerson(person){
   // height, weight, age, name, occupation, eye color.
   let personInfo = "First Name: " + person.firstName + "\n";
   personInfo += "Last Name: " + person.lastName + "\n";
-  personInfo += `${getGender(person)}\n`;
-  personInfo += `${getHeight(person)}\n`;
-  personInfo += `${getWeight(person)}\n`;
-  personInfo += `${getEyeColor(person)}\n`;
-  personInfo += `${getOccupation(person)}\n`;
-  personInfo += `${getGender(person)}\n`;
+  personInfo += `Gender: ${getGender(person)}\n`;
+  personInfo += `Height: ${getHeight(person)}\n`;
+  personInfo += `Weight: ${getWeight(person)}\n`;
+  personInfo += `Eye Color: ${getEyeColor(person)}\n`;
+  personInfo += `Occupation: ${getOccupation(person)}\n`;
 
   // TODO: finish getting the rest of the information to display
   alert(personInfo);
 };
 
 function getGender(person) {
-  return "Gender: " + person.gender;
+  return person.gender;
 }
 
 function getHeight(person) {
-  return "Height: " + person.height;
+  return person.height;
 }
 
 function getWeight(person) {
-  return "Weight: " + person.weight;
+  return person.weight;
 }
 
 function getEyeColor(person) {
-  return "Eye Color: " + person.eyeColor;
+  return person.eyeColor;
 }
 
 function getOccupation(person) {
-  return "Occupation: " + person.occupation;
+  return person.occupation;
 }
 
 function displayFamily(person, people) {
