@@ -12,7 +12,7 @@ function app(people){
       searchResults = searchByName(people);
       break;
     case 'no':
-      // TODO: search by traits
+      searchResults = searchByTrait(people);
       break;
       default:
     app(people); // restart app
@@ -89,6 +89,52 @@ function menuController(currentResults) {
   return currentResults;
 }
 
+function searchByTrait(people) {
+  let output = "Enter the trait to search by: \n";
+  let traits = "g: Gender \n";
+  traits += "h: Height \n";
+  traits += "w: Weight \n";
+  traits += "e: Eye Color \n";
+  traits += "o: Occupation \n";
+  let selectedTrait = prompt(output + traits).toLowerCase();
+
+  switch(selectedTrait) {
+    case "g":
+      people = getResultsBy("gender", people);
+      break;
+    case "h":
+      people = getResultsBy("height", people);
+      break;
+    case "w":
+      people = getResultsBy("weight", people);
+      break;
+    case "e":
+      people = getResultsBy("eyeColor", people);
+      break;
+    case "o":
+      people = getResultsBy("occupation", people);
+      break;
+    default:
+      searchByTrait(people);
+      break;
+  }
+  
+  return menuController(people);
+
+}
+
+function getResultsBy(trait, people) {
+  let traitValue = prompt(`Enter the value for ${trait}.`);
+  let foundPeople = people.filter(function(person){
+    if(person[trait] == traitValue) {
+      return true;
+    }
+    return false;
+  });
+  return foundPeople;
+}
+
+
 function multipleResultsMenu(results) {
   let output = `${results.length} results found. Choose a number below for more information about that person. \n`;
 
@@ -98,6 +144,10 @@ function multipleResultsMenu(results) {
 
   if(results[Number(command) - 1]) {
     return results[Number(command) - 1];
+
+  }
+  else if(command === "refine") {
+    return searchByTrait(results);
 
   }
   else {
