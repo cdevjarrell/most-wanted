@@ -41,7 +41,7 @@ function mainMenu(person, people){
     displayPerson(person);
     break;
     case "family":
-    displaySiblings(person, people);
+    displayFamily(person, people);
     break;
     case "descendants":
     // TODO: get person's descendants
@@ -116,15 +116,23 @@ function getOccupation(person) {
   return "Occupation: " + person.occupation;
 }
 
+function displayFamily(person, people) {
+  let output = '';
 
+  output += getParents(person, people);
+  output += getSiblings(person, people);
 
-function displaySiblings(person, people){
-  let siblings = false;
+  alert(output);
+}
+
+function getSiblings(person, people){
+  let siblings = '';
+  let siblingsArray = [];
   if (hasParents(person)){
-    siblings = people.filter(function(el) {
-      if (el.id !== person.id){
-        for(let i = 0; i < el.parents.length; i++){
-          if (el.parents[i] === person.parents[0]) { // Need to check for both parents, only checks against first parent currently.
+    siblingsArray = people.filter(function(currentPerson) {
+      if (currentPerson.id !== person.id){ // Not a sibling to yourself.
+        for(let i = 0; i < currentPerson.parents.length; i++){
+          if (currentPerson.parents[i] === person.parents[0]) { // Need to check for both parents, only checks against first parent currently.
             return true;
           }
         }
@@ -132,17 +140,35 @@ function displaySiblings(person, people){
       return false;
     })
   }
-  if (siblings) {
-    let output = "";  
-    for(let i = 0; i < siblings.length; i++){
-      output += formatName(siblings[i]) + "\n";
+
+  if (siblingsArray) {
+    for(let i = 0; i < siblingsArray.length; i++){
+      siblings += `Sibling: ${formatName(siblingsArray[i])}\n`;
     }
-    alert(output);
   }
-  else{
-    alert("No siblings found.");
-  }
+
+  return siblings;
 };
+
+function getParents(person, people) {
+  let output = '';
+
+  for (let i = 0; i < person.parents.length; i++) {
+    let id = person.parents[i];
+    let parent = people.filter(function (possibleParent) {
+      if (possibleParent.id === id) {
+        return true;
+      }
+      return false;
+    });
+
+    if (parent) {
+      output += `Parent: ${formatName(parent[0])}\n`;
+    }
+  }
+
+  return output;
+}
 
 function formatName(person){
   return person.firstName + " " + person.lastName;
