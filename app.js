@@ -138,7 +138,8 @@ function getResultsBy(trait, people) {
 function multipleResultsMenu(results) {
   let output = `${results.length} results found. Choose a number below for more information about that person. \n`;
 
-  output += `${getNameList(results)}`
+  output += `${getNameList(results)}\n`;
+  output += "To refine your search, type 'refine'.";
 
   let command = promptFor(output, chars);
 
