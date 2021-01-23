@@ -154,7 +154,7 @@ function multipleResultsMenu(results) {
 }
 
 function getNameList(results) {
-  return people
+  return results
     .map(function (person, index) {
       return `${index + 1}: ${formatName(person)}`;
     })
@@ -167,7 +167,7 @@ function displayPerson(person) {
   let personInfo = "First Name: " + person.firstName + "\n";
   personInfo += "Last Name: " + person.lastName + "\n";
   personInfo += `Gender: ${getGender(person)}\n`;
-  personInfo += `Birthdate: ${getDOB(person)}\n`;
+  personInfo += `Birthdate: ${getDOB(person)} (${getAge(person)})\n`;
   personInfo += `Height: ${getHeight(person)}\n`;
   personInfo += `Weight: ${getWeight(person)}\n`;
   personInfo += `Eye Color: ${getEyeColor(person)}\n`;
@@ -183,6 +183,16 @@ function getGender(person) {
 
 function getDOB(person) {
   return person.dob;
+}
+
+function getAge(person) {
+  let now = Date.now();
+  let [month, day, year] = person.dob.split("/");
+  let birthday = new Date(Number(year), Number(month), Number(day));
+  let difference = now - birthday;
+  let days = difference / (1000 * 60 * 60 * 24);
+
+  return Math.abs(Math.round(days / 365.25));
 }
 
 function getHeight(person) {
