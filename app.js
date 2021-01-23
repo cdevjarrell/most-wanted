@@ -154,24 +154,11 @@ function multipleResultsMenu(results) {
 }
 
 function getNameList(results) {
-  let list = "";
-
-  for (let i = 0; i < results.length; i++) {
-    list += `${i + 1}: ${formatName(results[i])}\n`;
-  }
-
-  return list;
-}
-
-// alerts a list of people
-function displayPeople(people) {
-  alert(
-    people
-      .map(function (person) {
-        return person.firstName + " " + person.lastName;
-      })
-      .join("\n")
-  );
+  return people
+    .map(function (person, index) {
+      return `${index + 1}: ${formatName(person)}`;
+    })
+    .join("\n");
 }
 
 function displayPerson(person) {
@@ -180,6 +167,7 @@ function displayPerson(person) {
   let personInfo = "First Name: " + person.firstName + "\n";
   personInfo += "Last Name: " + person.lastName + "\n";
   personInfo += `Gender: ${getGender(person)}\n`;
+  personInfo += `Birthdate: ${getDOB(person)}\n`;
   personInfo += `Height: ${getHeight(person)}\n`;
   personInfo += `Weight: ${getWeight(person)}\n`;
   personInfo += `Eye Color: ${getEyeColor(person)}\n`;
@@ -191,6 +179,10 @@ function displayPerson(person) {
 
 function getGender(person) {
   return person.gender;
+}
+
+function getDOB(person) {
+  return person.dob;
 }
 
 function getHeight(person) {
