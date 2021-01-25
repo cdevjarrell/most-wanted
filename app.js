@@ -160,14 +160,9 @@ function getNameList(results) {
 function displayPerson(person) {
   // print all of the information about a person:
   // height, weight, age, name, occupation, eye color.
-  let personInfo = "First Name: " + person.firstName + "\n";
-  personInfo += "Last Name: " + person.lastName + "\n";
-  personInfo += `Gender: ${getGender(person)}\n`;
-  personInfo += `Birthdate: ${getDOB(person)} (${getAge(person)})\n`;
-  personInfo += `Height: ${getHeight(person)}\n`;
-  personInfo += `Weight: ${getWeight(person)}\n`;
-  personInfo += `Eye Color: ${getEyeColor(person)}\n`;
-  personInfo += `Occupation: ${getOccupation(person)}\n`;
+  let personInfo = infoTraits
+    .map((trait) => `${trait.label}: ${trait.get(person)}`)
+    .join("\n");
 
   // TODO: finish getting the rest of the information to display
   alert(personInfo);
@@ -318,6 +313,16 @@ function isValidTraitCommand(input) {
 
   return commands.includes(input.toLowerCase());
 }
+
+const infoTraits = [
+  { label: "Name", get: formatName },
+  { label: "Gender", get: getGender },
+  { label: "Birthdate", get: getDOB },
+  { label: "Age", get: getAge },
+  { label: "Height", get: getWeight },
+  { label: "Eye Color", get: getEyeColor },
+  { label: "Occupation", get: getOccupation },
+];
 
 const searchableTraits = [
   "Gender",
