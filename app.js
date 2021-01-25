@@ -95,7 +95,7 @@ function menuController(currentResults) {
 function searchByTrait(people) {
   let output = "Enter the trait to search by: \n" + getSearchableTraitsList();
 
-  let selectedTrait = prompt(output).toLowerCase();
+  let selectedTrait = promptFor(output, isValidTraitCommand);
 
   switch (selectedTrait) {
     case "g":
@@ -313,6 +313,12 @@ function chars(input) {
   return true; // default validation only
 }
 
+function isValidTraitCommand(input) {
+  let commands = searchableTraits.map((trait) => trait.charAt(0).toLowerCase());
+
+  return commands.includes(input.toLowerCase());
+}
+
 const searchableTraits = [
   "Gender",
   "Height",
@@ -324,7 +330,7 @@ const searchableTraits = [
 function getSearchableTraitsList() {
   return searchableTraits
     .map((trait) => {
-      return `${trait.charAt(0).toLocaleLowerCase()}: ${trait}`;
+      return `${trait.charAt(0).toLowerCase()}: ${trait}`;
     })
     .join("\n");
 }
