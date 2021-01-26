@@ -149,10 +149,10 @@ function multipleResultsMenu(results) {
   }
 }
 
-function getNameList(results) {
+function getNameList(results, prefix = false) {
   return results
     .map(function (person, index) {
-      return `${index + 1}: ${formatName(person)}`;
+      return `${formatName(person, prefix ? prefix : `${index + 1}:`)}`;
     })
     .join("\n");
 }
@@ -279,8 +279,8 @@ function getParents(person, people) {
   return output;
 }
 
-function formatName(person) {
-  return `${person.firstName} ${person.lastName}`;
+function formatName(person, prefix = "") {
+  return `${prefix} ${person.firstName} ${person.lastName}`;
 }
 
 function hasParents(person) {
