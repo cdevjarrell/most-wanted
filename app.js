@@ -330,7 +330,8 @@ const infoTraits = [
   { label: "Gender", get: getGender },
   { label: "Birthdate", get: getDOB },
   { label: "Age", get: getAge },
-  { label: "Height", get: getWeight },
+  { label: "Height", get: getHeight },
+  { label: "Weight", get: getWeight },
   { label: "Eye Color", get: getEyeColor },
   { label: "Occupation", get: getOccupation },
 ];
