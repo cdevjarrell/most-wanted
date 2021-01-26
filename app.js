@@ -80,7 +80,7 @@ function menuController(currentResults) {
 function multipleResultsMenu(results) {
   let output = `${results.length} results found. Choose a number below for more information about that person. \n`;
 
-  output += `${getNameList(results)}\n`;
+  output += `${makeList(getNames(results))}\n`;
   output += "To refine your search, type 'refine'.";
 
   let command = promptFor(output, chars);
@@ -140,14 +140,10 @@ function getResultsBy(trait, people) {
   return foundPeople;
 }
 
-function getNameList(results, prefix = false) {
-  return (
-    results
-      .map(function (person, index) {
-        return `${getFullName(person, prefix ? prefix : `${index + 1}:`)}`;
-      })
-      .join("\n") + "\n"
-  );
+function getNames(results, prefix = false) {
+  return results.map(function (person, index) {
+    return `${getFullName(person, prefix ? prefix : `${index + 1}:`)}`;
+  });
 }
 
 function getFullName(person, prefix = "") {
@@ -155,37 +151,40 @@ function getFullName(person, prefix = "") {
 }
 
 function getGender(person) {
-  return person.gender;
+  return person.gender ? person.gender : "Not available";
 }
 
 function getDOB(person) {
-  return person.dob;
+  return person.dob ? person.dob : "Not available";
 }
 
 function getAge(person) {
-  let now = Date.now();
-  let [month, day, year] = person.dob.split("/");
-  let birthday = new Date(Number(year), Number(month), Number(day));
-  let difference = now - birthday;
-  let days = difference / (1000 * 60 * 60 * 24);
+  if (person.dob) {
+    let now = Date.now();
+    let [month, day, year] = person.dob.split("/");
+    let birthday = new Date(Number(year), Number(month), Number(day));
+    let difference = now - birthday;
+    let days = difference / (1000 * 60 * 60 * 24);
 
-  return Math.abs(Math.floor(days / 365.25));
+    return Math.abs(Math.floor(days / 365.25));
+  }
+  return "Not available";
 }
 
 function getHeight(person) {
-  return person.height;
+  return person.height ? person.height : "Not available";
 }
 
 function getWeight(person) {
-  return person.weight;
+  return person.weight ? person.height : "Not available";
 }
 
 function getEyeColor(person) {
-  return person.eyeColor;
+  return person.eyeColor ? person.eyeColor : "Not available";
 }
 
 function getOccupation(person) {
-  return person.occupation;
+  return person.occupation ? person.occupation : "Not available";
 }
 
 function getDescendants(person, people) {
@@ -211,7 +210,7 @@ function getSpouse(person, people) {
     return false;
   });
 
-  return getNameList(spouse, "Spouse:");
+  return getNames(spouse, "Spouse:");
 }
 
 function getSiblings(person, people) {
@@ -227,7 +226,7 @@ function getSiblings(person, people) {
     return false;
   });
 
-  return getNameList(siblings, "Sibling:");
+  return getNames(siblings, "Sibling:");
 }
 
 function getParents(person, people) {
@@ -239,7 +238,7 @@ function getParents(person, people) {
     return false;
   });
 
-  return getNameList(parents, "Parent:");
+  return getNames(parents, "Parent:");
 }
 
 function displayPerson(person) {
@@ -254,16 +253,23 @@ function displayPerson(person) {
 }
 
 function displayFamily(person, people) {
-  let output = "";
+  let family = [
+    ...getParents(person, people),
+    ...getSpouse(person, people),
+    ...getSiblings(person, people),
+  ];
 
-  output += getParents(person, people);
-  output += getSpouse(person, people);
-  output += getSiblings(person, people);
+  let output = makeList(family);
 
   if (!output) {
-    output += "No family information available.";
+    output = "No family information available.";
   }
+
   alert(output);
+}
+
+function makeList(items) {
+  return items.join("\n");
 }
 
 function displayDescendants(person, people) {
