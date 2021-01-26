@@ -100,6 +100,10 @@ function searchByTrait(people) {
 
   let trait = getTraitByCommand(command);
 
+  if (!trait) {
+    throw "Invalid Trait Command!";
+  }
+
   people = getResultsBy(trait, people);
 
   return menuController(people);
@@ -347,10 +351,16 @@ function getSearchableTraitsList() {
 }
 
 function getTraitByCommand(command) {
-  return searchableTraits.filter((trait) => {
+  let traits = searchableTraits.filter((trait) => {
     if (trait.command === command) {
       return true;
     }
     return false;
-  })[0];
+  });
+
+  if (traits.length > 0) {
+    return traits[0];
+  }
+
+  return false;
 }
