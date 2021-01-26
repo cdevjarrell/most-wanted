@@ -176,7 +176,7 @@ function getHeight(person) {
 }
 
 function getWeight(person) {
-  return person.weight ? person.height : "Not available";
+  return person.weight ? person.weight : "Not available";
 }
 
 function getEyeColor(person) {
