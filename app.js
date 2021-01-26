@@ -65,6 +65,35 @@ function mainMenu(person, people) {
   }
 }
 
+function menuController(currentResults) {
+  if (currentResults.length > 1) {
+    currentResults = multipleResultsMenu(currentResults);
+  } else if (currentResults.length == 0) {
+    currentResults = false;
+  } else {
+    currentResults = currentResults[0];
+  }
+
+  return currentResults;
+}
+
+function multipleResultsMenu(results) {
+  let output = `${results.length} results found. Choose a number below for more information about that person. \n`;
+
+  output += `${getNameList(results)}\n`;
+  output += "To refine your search, type 'refine'.";
+
+  let command = promptFor(output, chars);
+
+  if (results[Number(command) - 1]) {
+    return results[Number(command) - 1];
+  } else if (command === "refine") {
+    return searchByTrait(results);
+  } else {
+    return multipleResultsMenu(results);
+  }
+}
+
 function searchByName(people) {
   let firstName = promptFor("What is the person's first name?", chars);
   let lastName = promptFor("What is the person's last name?", chars);
@@ -79,18 +108,6 @@ function searchByName(people) {
   // TODO: find the person using the name they entered
   // No results, 1 result, or multiple.
   return menuController(foundPerson);
-}
-
-function menuController(currentResults) {
-  if (currentResults.length > 1) {
-    currentResults = multipleResultsMenu(currentResults);
-  } else if (currentResults.length == 0) {
-    currentResults = false;
-  } else {
-    currentResults = currentResults[0];
-  }
-
-  return currentResults;
 }
 
 function searchByTrait(people) {
@@ -123,42 +140,18 @@ function getResultsBy(trait, people) {
   return foundPeople;
 }
 
-function multipleResultsMenu(results) {
-  let output = `${results.length} results found. Choose a number below for more information about that person. \n`;
-
-  output += `${getNameList(results)}\n`;
-  output += "To refine your search, type 'refine'.";
-
-  let command = promptFor(output, chars);
-
-  if (results[Number(command) - 1]) {
-    return results[Number(command) - 1];
-  } else if (command === "refine") {
-    return searchByTrait(results);
-  } else {
-    return multipleResultsMenu(results);
-  }
-}
-
 function getNameList(results, prefix = false) {
   return (
     results
       .map(function (person, index) {
-        return `${formatName(person, prefix ? prefix : `${index + 1}:`)}`;
+        return `${getFullName(person, prefix ? prefix : `${index + 1}:`)}`;
       })
       .join("\n") + "\n"
   );
 }
 
-function displayPerson(person) {
-  // print all of the information about a person:
-  // height, weight, age, name, occupation, eye color.
-  let personInfo = infoTraits
-    .map((trait) => `${trait.label}: ${trait.get(person)}`)
-    .join("\n");
-
-  // TODO: finish getting the rest of the information to display
-  alert(personInfo);
+function getFullName(person, prefix = "") {
+  return `${prefix} ${person.firstName} ${person.lastName}`;
 }
 
 function getGender(person) {
@@ -193,33 +186,6 @@ function getEyeColor(person) {
 
 function getOccupation(person) {
   return person.occupation;
-}
-
-function displayFamily(person, people) {
-  let output = "";
-
-  output += getParents(person, people);
-  output += getSpouse(person, people);
-  output += getSiblings(person, people);
-
-  if (!output) {
-    output += "No family information available.";
-  }
-  alert(output);
-}
-
-function displayDescendants(person, people) {
-  let message = "Descendants:\n";
-  let descendants = getDescendants(person, people).map((person) =>
-    formatName(person)
-  );
-
-  if (descendants.length === 0) {
-    message = `${formatName(person)} does not have any descendants.`;
-  } else {
-    message += descendants.join("\n");
-  }
-  alert(message);
 }
 
 function getDescendants(person, people) {
@@ -276,8 +242,42 @@ function getParents(person, people) {
   return getNameList(parents, "Parent:");
 }
 
-function formatName(person, prefix = "") {
-  return `${prefix} ${person.firstName} ${person.lastName}`;
+function displayPerson(person) {
+  // print all of the information about a person:
+  // height, weight, age, name, occupation, eye color.
+  let personInfo = infoTraits
+    .map((trait) => `${trait.label}: ${trait.get(person)}`)
+    .join("\n");
+
+  // TODO: finish getting the rest of the information to display
+  alert(personInfo);
+}
+
+function displayFamily(person, people) {
+  let output = "";
+
+  output += getParents(person, people);
+  output += getSpouse(person, people);
+  output += getSiblings(person, people);
+
+  if (!output) {
+    output += "No family information available.";
+  }
+  alert(output);
+}
+
+function displayDescendants(person, people) {
+  let message = "Descendants:\n";
+  let descendants = getDescendants(person, people).map((person) =>
+    getFullName(person)
+  );
+
+  if (descendants.length === 0) {
+    message = `${getFullName(person)} does not have any descendants.`;
+  } else {
+    message += descendants.join("\n");
+  }
+  alert(message);
 }
 
 // function that prompts and validates user input
@@ -320,7 +320,7 @@ function isValidEyeColor(input) {
 }
 
 const infoTraits = [
-  { label: "Name", get: formatName },
+  { label: "Name", get: getFullName },
   { label: "Gender", get: getGender },
   { label: "Birthdate", get: getDOB },
   { label: "Age", get: getAge },
