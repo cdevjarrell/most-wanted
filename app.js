@@ -53,6 +53,7 @@ function mainMenu(person, people) {
       break;
     case "descendants":
       // TODO: get person's descendants
+      displayDescendants(person, people);
       break;
     case "restart":
       app(people); // restart
@@ -213,6 +214,35 @@ function displayFamily(person, people) {
     output += "No family information available.";
   }
   alert(output);
+}
+
+function displayDescendants(person, people) {
+  let message = "Descendants:\n";
+  let descendants = getDescendants(person, people).map((person) =>
+    formatName(person)
+  );
+
+  if (descendants.length === 0) {
+    message = `${formatName(person)} does not have any descendants.`;
+  } else {
+    message += descendants.join("\n");
+  }
+  alert(message);
+}
+
+function getDescendants(person, people) {
+  let descendants = people.filter(function (possibleDescendant) {
+    if (possibleDescendant.parents.includes(person.id)) {
+      return true;
+    }
+    return false;
+  });
+
+  for (person of descendants) {
+    descendants = [...descendants, ...getDescendants(person, people)];
+  }
+
+  return descendants;
 }
 
 function getSpouse(person, people) {
