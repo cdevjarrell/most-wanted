@@ -151,11 +151,13 @@ function multipleResultsMenu(results) {
 }
 
 function getNameList(results, prefix = false) {
-  return results
-    .map(function (person, index) {
-      return `${formatName(person, prefix ? prefix : `${index + 1}:`)}`;
-    })
-    .join("\n");
+  return (
+    results
+      .map(function (person, index) {
+        return `${formatName(person, prefix ? prefix : `${index + 1}:`)}`;
+      })
+      .join("\n") + "\n"
+  );
 }
 
 function displayPerson(person) {
@@ -246,78 +248,46 @@ function getDescendants(person, people) {
 }
 
 function getSpouse(person, people) {
-  let output = "";
-
-  let spouse = people.filter(function (possibleSpouse) {
+  let spouse = people.filter((possibleSpouse) => {
     if (person.currentSpouse === possibleSpouse.id) {
       return true;
     }
     return false;
   });
 
-  if (spouse) {
-    for (let i = 0; i < spouse.length; i++) {
-      output += `Spouse: ${formatName(spouse[i])}\n`;
-    }
-  }
-
-  return output;
+  return getNameList(spouse, "Spouse:");
 }
 
 function getSiblings(person, people) {
-  let siblings = "";
-  let siblingsArray = [];
-  if (hasParents(person)) {
-    siblingsArray = people.filter(function (currentPerson) {
-      if (currentPerson.id !== person.id) {
-        // Not a sibling to yourself.
-        for (let i = 0; i < currentPerson.parents.length; i++) {
-          if (person.parents.includes(currentPerson.parents[i])) {
-            return true;
-          }
+  let siblings = people.filter((currentPerson) => {
+    if (currentPerson.id !== person.id) {
+      // Not a sibling to yourself.
+      for (let i = 0; i < currentPerson.parents.length; i++) {
+        if (person.parents.includes(currentPerson.parents[i])) {
+          return true;
         }
       }
-      return false;
-    });
-  }
-  if (siblingsArray) {
-    for (let i = 0; i < siblingsArray.length; i++) {
-      siblings += `Sibling: ${formatName(siblingsArray[i])}\n`;
     }
-  }
+    return false;
+  });
 
-  return siblings;
+  return getNameList(siblings, "Sibling:");
 }
 
 function getParents(person, people) {
-  let output = "";
-
-  for (let i = 0; i < person.parents.length; i++) {
-    let id = person.parents[i];
-    let parent = people.filter(function (possibleParent) {
-      if (possibleParent.id === id) {
-        return true;
-      }
-      return false;
-    });
-
-    if (parent) {
-      output += `Parent: ${formatName(parent[0])}\n`;
+  let parents = people.filter((possibleParent) => {
+    if (person.parents.includes(possibleParent.id)) {
+      return true;
     }
-  }
 
-  return output;
+    return false;
+  });
+
+  return getNameList(parents, "Parent:");
 }
 
 function formatName(person, prefix = "") {
   return `${prefix} ${person.firstName} ${person.lastName}`;
-}
-
-function hasParents(person) {
-  if (person.parents.length !== 0) {
-    return true;
-  }
-  return false;
 }
 
 // function that prompts and validates user input
