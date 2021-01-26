@@ -96,36 +96,22 @@ function menuController(currentResults) {
 function searchByTrait(people) {
   let output = "Enter the trait to search by: \n" + getSearchableTraitsList();
 
-  let selectedTrait = promptFor(output, isValidTraitCommand);
+  let command = promptFor(output, isValidTraitCommand);
 
-  switch (selectedTrait) {
-    case "g":
-      people = getResultsBy("gender", people);
-      break;
-    case "h":
-      people = getResultsBy("height", people);
-      break;
-    case "w":
-      people = getResultsBy("weight", people);
-      break;
-    case "e":
-      people = getResultsBy("eyeColor", people);
-      break;
-    case "o":
-      people = getResultsBy("occupation", people);
-      break;
-    default:
-      searchByTrait(people);
-      break;
-  }
+  let trait = getTraitByCommand(command);
+
+  people = getResultsBy(trait, people);
 
   return menuController(people);
 }
 
 function getResultsBy(trait, people) {
-  let traitValue = prompt(`Enter the value for ${trait}.`);
+  let traitValue = promptFor(
+    `Enter the value for ${trait.label.toLowerCase()}.`,
+    trait.validation
+  );
   let foundPeople = people.filter(function (person) {
-    if (person[trait] == traitValue) {
+    if (person[trait.key] == traitValue.toLowerCase()) {
       return true;
     }
     return false;
@@ -186,7 +172,7 @@ function getAge(person) {
   let difference = now - birthday;
   let days = difference / (1000 * 60 * 60 * 24);
 
-  return Math.abs(Math.round(days / 365.25));
+  return Math.abs(Math.floor(days / 365.25));
 }
 
 function getHeight(person) {
@@ -309,9 +295,24 @@ function chars(input) {
 }
 
 function isValidTraitCommand(input) {
-  let commands = searchableTraits.map((trait) => trait.charAt(0).toLowerCase());
+  let commands = searchableTraits.map((trait) => trait.command);
 
   return commands.includes(input.toLowerCase());
+}
+
+function isValidGender(input) {
+  return input.toLowerCase() === "male" || input.toLowerCase() === "female";
+}
+
+function isValidNumber(input) {
+  let numberInput = Number(input);
+  return !isNaN(numberInput);
+}
+
+function isValidEyeColor(input) {
+  let eyeColors = ["brown", "blue", "hazel", "amber", "black", "green", "grey"];
+
+  return eyeColors.includes(input.toLowerCase());
 }
 
 const infoTraits = [
@@ -325,17 +326,31 @@ const infoTraits = [
 ];
 
 const searchableTraits = [
-  "Gender",
-  "Height",
-  "Weight",
-  "Eye Color",
-  "Occupation",
+  { key: "gender", label: "Gender", command: "g", validation: isValidGender },
+  { key: "height", label: "Height", command: "h", validation: isValidNumber },
+  { key: "weight", label: "Weight", command: "w", validation: isValidNumber },
+  {
+    key: "eyeColor",
+    label: "Eye Color",
+    command: "e",
+    validation: isValidEyeColor,
+  },
+  { key: "occupation", label: "Occupation", command: "o", validation: chars },
 ];
 
 function getSearchableTraitsList() {
   return searchableTraits
     .map((trait) => {
-      return `${trait.charAt(0).toLowerCase()}: ${trait}`;
+      return `${trait.command}: ${trait.label}`;
     })
     .join("\n");
+}
+
+function getTraitByCommand(command) {
+  return searchableTraits.filter((trait) => {
+    if (trait.command === command) {
+      return true;
+    }
+    return false;
+  })[0];
 }
