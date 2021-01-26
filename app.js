@@ -162,7 +162,7 @@ function getAge(person) {
   if (person.dob) {
     let now = Date.now();
     let [month, day, year] = person.dob.split("/");
-    let birthday = new Date(Number(year), Number(month), Number(day));
+    let birthday = new Date(Number(year), Number(month) - 1, Number(day));
     let difference = now - birthday;
     let days = difference / (1000 * 60 * 60 * 24);
 
