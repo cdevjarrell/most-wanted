@@ -190,8 +190,9 @@ function getAge(person) {
     let birthday = new Date(Number(year), Number(month) - 1, Number(day));
     let difference = now - birthday;
     let days = difference / (1000 * 60 * 60 * 24);
+    let years = Math.floor(days / 365.25);
 
-    return Math.abs(Math.floor(days / 365.25));
+    return years < 0 ? 0 : years;
   }
 
   return valid;
