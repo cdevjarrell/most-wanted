@@ -37,7 +37,7 @@ function mainMenu(person, people) {
   }
 
   let displayOption = prompt(
-    "Found" +
+    "Found " +
       getFullName(person) +
       " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'"
   );
@@ -96,17 +96,20 @@ function multipleResultsMenu(results) {
 function searchByName(people) {
   let firstName = promptFor("What is the person's first name?", chars);
   let lastName = promptFor("What is the person's last name?", chars);
+  let fullName = `${firstName} ${lastName}`;
+  let foundPerson = getResultsByName(fullName, people);
 
-  let foundPerson = people.filter((person) => {
-    if (person.firstName === firstName && person.lastName === lastName) {
+  return menuController(foundPerson);
+}
+
+function getResultsByName(name, people) {
+  return people.filter((person) => {
+    if (getFullName(person) === name) {
       return true;
     } else {
       return false;
     }
   });
-  // TODO: find the person using the name they entered
-  // No results, 1 result, or multiple.
-  return menuController(foundPerson);
 }
 
 function searchByTrait(people) {
@@ -148,7 +151,7 @@ function getNames(results, prefix = false) {
 }
 
 function getFullName(person, prefix = "") {
-  return `${prefix} ${person.firstName} ${person.lastName}`;
+  return `${prefix}${person.firstName} ${person.lastName}`;
 }
 
 function getGender(person) {
@@ -211,7 +214,7 @@ function getSpouse(person, people) {
     return false;
   });
 
-  return getNames(spouse, "Spouse:");
+  return getNames(spouse, "Spouse: ");
 }
 
 function getSiblings(person, people) {
@@ -227,7 +230,7 @@ function getSiblings(person, people) {
     return false;
   });
 
-  return getNames(siblings, "Sibling:");
+  return getNames(siblings, "Sibling: ");
 }
 
 function getParents(person, people) {
@@ -239,7 +242,7 @@ function getParents(person, people) {
     return false;
   });
 
-  return getNames(parents, "Parent:");
+  return getNames(parents, "Parent: ");
 }
 
 function displayPerson(person) {
