@@ -15,6 +15,7 @@ function app(people) {
       searchResults = searchByName(people);
       break;
     case "no":
+      searchTerms.reset();
       searchResults = searchByTrait(people);
       break;
     default:
@@ -36,10 +37,8 @@ function mainMenu(person, people) {
   }
 
   let displayOption = prompt(
-    "Found " +
-      person.firstName +
-      " " +
-      person.lastName +
+    "Found" +
+      getFullName(person) +
       " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'"
   );
 
@@ -78,8 +77,8 @@ function menuController(currentResults) {
 }
 
 function multipleResultsMenu(results) {
-  let output = `${results.length} results found. Choose a number below for more information about that person. \n`;
-
+  let output = `${makeList(getSearchTerms())} \n\n`;
+  output += `${results.length} results found. Choose a number below for more information about that person. \n\n`;
   output += `${makeList(getNames(results))}\n`;
   output += "To refine your search, type 'refine'.";
 
@@ -98,7 +97,7 @@ function searchByName(people) {
   let firstName = promptFor("What is the person's first name?", chars);
   let lastName = promptFor("What is the person's last name?", chars);
 
-  let foundPerson = people.filter(function (person) {
+  let foundPerson = people.filter((person) => {
     if (person.firstName === firstName && person.lastName === lastName) {
       return true;
     } else {
@@ -131,7 +130,8 @@ function getResultsBy(trait, people) {
     `Enter the value for ${trait.label.toLowerCase()}.`,
     trait.validation
   );
-  let foundPeople = people.filter(function (person) {
+  searchTerms.terms.push({ trait: trait.label, value: traitValue });
+  let foundPeople = people.filter((person) => {
     if (person[trait.key] == traitValue.toLowerCase()) {
       return true;
     }
@@ -141,9 +141,10 @@ function getResultsBy(trait, people) {
 }
 
 function getNames(results, prefix = false) {
-  return results.map(function (person, index) {
-    return `${getFullName(person, prefix ? prefix : `${index + 1}:`)}`;
-  });
+  return results.map(
+    (person, index) =>
+      `${getFullName(person, prefix ? prefix : `${index + 1}:`)}`
+  );
 }
 
 function getFullName(person, prefix = "") {
@@ -188,7 +189,7 @@ function getOccupation(person) {
 }
 
 function getDescendants(person, people) {
-  let descendants = people.filter(function (possibleDescendant) {
+  let descendants = people.filter((possibleDescendant) => {
     if (possibleDescendant.parents.includes(person.id)) {
       return true;
     }
@@ -336,6 +337,17 @@ const infoTraits = [
   { label: "Occupation", get: getOccupation },
 ];
 
+const searchTerms = {
+  terms: [],
+  reset: function () {
+    this.terms = [];
+  },
+};
+
+function getSearchTerms() {
+  return searchTerms.terms.map((term) => `${term.trait}: ${term.value}`);
+}
+
 const searchableTraits = [
   { key: "gender", label: "Gender", command: "g", validation: isValidGender },
   { key: "height", label: "Height", command: "h", validation: isValidNumber },
@@ -350,10 +362,15 @@ const searchableTraits = [
 ];
 
 function getSearchableTraitsList() {
+  let searchedTerms = searchTerms.terms.map((term) => term.trait);
   return searchableTraits
-    .map((trait) => {
-      return `${trait.command}: ${trait.label}`;
+    .filter((trait) => {
+      if (searchedTerms.includes(trait.label)) {
+        return false;
+      }
+      return true;
     })
+    .map((trait) => `${trait.command}: ${trait.label}`)
     .join("\n");
 }
 
