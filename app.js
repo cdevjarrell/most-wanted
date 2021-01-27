@@ -222,7 +222,7 @@ function getDescendants(person, people) {
     return false;
   });
 
-  for (person of descendants) {
+  for (let person of descendants) {
     descendants = [...descendants, ...getDescendants(person, people)];
   }
 
