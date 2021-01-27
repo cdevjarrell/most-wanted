@@ -47,14 +47,12 @@ function mainMenu(person, people) {
 
   switch (displayOption) {
     case "info":
-      // TODO: get person's info
       displayPerson(person);
       break;
     case "family":
       displayFamily(person, people);
       break;
     case "descendants":
-      // TODO: get person's descendants
       displayDescendants(person, people);
       break;
     case "restart":
@@ -255,13 +253,10 @@ function getParents(person, people) {
 }
 
 function displayPerson(person) {
-  // print all of the information about a person:
-  // height, weight, age, name, occupation, eye color.
   let personInfo = infoTraits
     .map((trait) => `${trait.label}: ${trait.get(person)}`)
     .join("\n");
 
-  // TODO: finish getting the rest of the information to display
   alert(personInfo);
 }
 
