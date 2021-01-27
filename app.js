@@ -9,9 +9,11 @@ function app(people) {
     "Do you know the name of the person you are looking for? Enter 'yes' or 'no'",
     yesNo
   );
+
   if (!searchType) {
     return;
   }
+
   let searchResults;
   switch (searchType.toLowerCase()) {
     case "yes":
