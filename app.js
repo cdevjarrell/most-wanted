@@ -33,7 +33,6 @@ function app(people) {
 // Menu function to call once you find who you are looking for
 function mainMenu(person, people) {
   /* Here we pass in the entire person object that we found in our search, as well as the entire original dataset of people. We need people in order to find descendants and other information that the user may want. */
-
   if (!person) {
     alert("Could not find that individual.");
     return app(people); // restart
@@ -173,15 +172,17 @@ function getFullName(person, prefix = "") {
 }
 
 function getGender(person) {
-  return person.gender ? person.gender : "Not available";
+  return checkProperty(person.gender);
 }
 
 function getDOB(person) {
-  return person.dob ? person.dob : "Not available";
+  return checkProperty(person.dob);
 }
 
 function getAge(person) {
-  if (person.dob) {
+  let valid = checkProperty(person.dob);
+
+  if (valid) {
     let now = Date.now();
     let [month, day, year] = person.dob.split("/");
     let birthday = new Date(Number(year), Number(month) - 1, Number(day));
@@ -190,7 +191,8 @@ function getAge(person) {
 
     return Math.abs(Math.floor(days / 365.25));
   }
-  return "Not available";
+
+  return valid;
 }
 
 function getHeight(person) {
@@ -320,6 +322,7 @@ function promptFor(question, valid) {
       break;
     }
   } while (!response || !valid(response));
+
   return response;
 }
 
@@ -345,6 +348,7 @@ function isValidGender(input) {
 
 function isValidNumber(input) {
   let numberInput = Number(input);
+
   return !isNaN(numberInput);
 }
 
@@ -391,6 +395,7 @@ const searchableTraits = [
 
 function getSearchableTraitsList() {
   let searchedTerms = searchTerms.terms.map((term) => term.trait);
+
   return searchableTraits
     .filter((trait) => {
       if (searchedTerms.includes(trait.label)) {
@@ -407,6 +412,7 @@ function getTraitByCommand(command) {
     if (trait.command === command) {
       return true;
     }
+
     return false;
   });
 
