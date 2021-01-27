@@ -141,23 +141,30 @@ function getResultsBy(trait, people) {
     `Enter the value for ${trait.label.toLowerCase()}.`,
     trait.validation
   );
+
   if (!traitValue) {
     return [];
   }
-  searchTerms.terms.push({ trait: trait.label, value: traitValue });
+
+  searchTerms.terms.push({
+    trait: trait.label,
+    value: traitValue.toLowerCase(),
+  });
+
   let foundPeople = people.filter((person) => {
     if (person[trait.key] == traitValue.toLowerCase()) {
       return true;
     }
     return false;
   });
+
   return foundPeople;
 }
 
 function getNames(results, prefix = false) {
   return results.map(
     (person, index) =>
-      `${getFullName(person, prefix ? prefix : `${index + 1}:`)}`
+      `${getFullName(person, prefix ? prefix : `${index + 1}: `)}`
   );
 }
 
