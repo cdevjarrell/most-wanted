@@ -8,9 +8,12 @@ function app(people) {
   let searchType = promptFor(
     "Do you know the name of the person you are looking for? Enter 'yes' or 'no'",
     yesNo
-  ).toLowerCase();
+  );
+  if (!searchType) {
+    return;
+  }
   let searchResults;
-  switch (searchType) {
+  switch (searchType.toLowerCase()) {
     case "yes":
       searchResults = searchByName(people);
       break;
@@ -78,11 +81,14 @@ function menuController(currentResults) {
 
 function multipleResultsMenu(results) {
   let output = `${makeList(getSearchTerms())} \n\n`;
-  output += `${results.length} results found. Choose a number below for more information about that person. \n\n`;
+  output += `${results.length} results found. Choose a number below for more information about that person. To refine your search, type 'refine'.\n\n`;
   output += `${makeList(getNames(results))}\n`;
-  output += "To refine your search, type 'refine'.";
 
   let command = promptFor(output, chars);
+
+  if (!command) {
+    return;
+  }
 
   if (results[Number(command) - 1]) {
     return results[Number(command) - 1];
@@ -133,6 +139,9 @@ function getResultsBy(trait, people) {
     `Enter the value for ${trait.label.toLowerCase()}.`,
     trait.validation
   );
+  if (!traitValue) {
+    return [];
+  }
   searchTerms.terms.push({ trait: trait.label, value: traitValue });
   let foundPeople = people.filter((person) => {
     if (person[trait.key] == traitValue.toLowerCase()) {
@@ -293,7 +302,12 @@ function displayDescendants(person, people) {
 // function that prompts and validates user input
 function promptFor(question, valid) {
   do {
-    var response = prompt(question).trim();
+    var response = prompt(question);
+    if (response) {
+      response = response.trim();
+    } else {
+      break;
+    }
   } while (!response || !valid(response));
   return response;
 }
