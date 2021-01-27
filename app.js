@@ -252,15 +252,20 @@ function getSiblings(person, people) {
 }
 
 function getParents(person, people) {
-  let parents = people.filter((possibleParent) => {
-    if (person.parents.includes(possibleParent.id)) {
-      return true;
-    }
+  return people
 
-    return false;
-  });
-
-  return getNames(parents, "Parent: ");
+    .filter((possibleParent) => {
+      if (person.parents.includes(possibleParent.id)) {
+        if (possibleParent.gender == "male") {
+          possibleParent.relationship = "Father: ";
+        } else {
+          possibleParent.relationship = "Mother: ";
+        }
+        return true;
+      }
+      return false;
+    })
+    .map((parent) => `${parent.relationship} ${getFullName(parent)}`);
 }
 
 function displayPerson(person) {
