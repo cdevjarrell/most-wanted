@@ -194,19 +194,19 @@ function getAge(person) {
 }
 
 function getHeight(person) {
-  return person.height ? person.height : "Not available";
+  return checkProperty(person.height);
 }
 
 function getWeight(person) {
-  return person.weight ? person.weight : "Not available";
+  return checkProperty(person.weight);
 }
 
 function getEyeColor(person) {
-  return person.eyeColor ? person.eyeColor : "Not available";
+  return checkProperty(person.eyeColor);
 }
 
 function getOccupation(person) {
-  return person.occupation ? person.occupation : "Not available";
+  return checkProperty(person.occupation);
 }
 
 function getDescendants(person, people) {
@@ -419,4 +419,8 @@ function getTraitByCommand(command) {
 
 function compareStrings(string1, string2) {
   return string1.trim().toLowerCase() === string2.trim().toLowerCase();
+}
+
+function checkProperty(property) {
+  return property ? property : "Not available";
 }
