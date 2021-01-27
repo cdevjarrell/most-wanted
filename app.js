@@ -104,7 +104,7 @@ function searchByName(people) {
 
 function getResultsByName(name, people) {
   return people.filter((person) => {
-    if (getFullName(person) === name) {
+    if (compareStrings(getFullName(person), name)) {
       return true;
     } else {
       return false;
@@ -390,4 +390,8 @@ function getTraitByCommand(command) {
   }
 
   return false;
+}
+
+function compareStrings(string1, string2) {
+  return string1.trim().toLowerCase() === string2.trim().toLowerCase();
 }
