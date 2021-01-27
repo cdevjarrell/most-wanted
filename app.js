@@ -231,7 +231,7 @@ function getSpouse(person, people) {
 function getSiblings(person, people) {
   let siblings = people.filter((currentPerson) => {
     if (currentPerson.id !== person.id) {
-      // Not a sibling to yourself.
+      // exclude yourself from the sibling list
       for (let i = 0; i < currentPerson.parents.length; i++) {
         if (person.parents.includes(currentPerson.parents[i])) {
           return true;
